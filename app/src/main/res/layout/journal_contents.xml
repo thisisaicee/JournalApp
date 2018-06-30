@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_journal_circle_40"
-        android:paddingRight="20sp"/>
+        android:paddingRight="@dimen/padding_margin_20dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -34,19 +34,18 @@
             style="@style/Base.TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
             android:textSize="10sp"
             android:gravity="center_vertical"
-            tools:text="someauthor@email.com" />
+            android:textColor="@color/colorPrimary"
+            tools:text="@string/sample_mail" />
 
 
         <TextView
             android:id="@+id/journal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/padding_margin_5dp"
             tools:text="@string/long_text" />
-
 
     </LinearLayout>
 
