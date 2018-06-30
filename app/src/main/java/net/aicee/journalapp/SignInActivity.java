@@ -173,6 +173,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         } else if (i == R.id.button_sign_up) {
             signUp();
         }
+        else if (i == R.id.button_google_sign_in){
+            //sign in with google button
+        }
     }
 }
 
