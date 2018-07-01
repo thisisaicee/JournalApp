@@ -70,7 +70,7 @@ public class NewJournalActivity extends BaseActivity {
             return;
         }
 
-        // Disable button so there are no multi-posts
+        // Disable button so there are no multi-journals
         setEditingEnabled(false);
         Toast.makeText(this, "Submitting...", Toast.LENGTH_SHORT).show();
 
