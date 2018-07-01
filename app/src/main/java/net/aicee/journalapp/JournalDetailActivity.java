@@ -89,7 +89,7 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
         databaseReference.addValueEventListener(journalListener);
         // [END journal_value_event_listener]
 
-        // Keep copy of post listener so we can remove it when app stops
+        // Keep copy of journal listener so we can remove it when app stops
         this.journalListener = journalListener;
 
 
