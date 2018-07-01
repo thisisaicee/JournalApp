@@ -12,7 +12,7 @@ Authentication (Email + Password authentification, Google Authentification),
 User Registration, 
 Submitting Diary Entry, 
 Editing Diary Entry, 
-Deleting Data Entry, 
+Deleting Data Entry
 
 The data is persisted on Firebase and the whole project is done while adhering strictly to the style guide for Java
 
