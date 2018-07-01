@@ -23,7 +23,7 @@ public class JournalViewHolder extends RecyclerView.ViewHolder {
         TitleTextView = itemView.findViewById(R.id.journal_title);
         AuthorTextView = itemView.findViewById(R.id.journal_author);
         starView = itemView.findViewById(R.id.star);
-        numStarsView = itemView.findViewById(R.id.post_num_stars);
+        numStarsView = itemView.findViewById(R.id.journal_num_stars);
         ContentTextView = itemView.findViewById(R.id.journal_text);
     }
 
