@@ -8,11 +8,11 @@ register and login using google authentification, view all entries to their diar
 
 APP Features
 -----------------------
-Authentication (Email + Password authentification, Google Authentification)
-User Registration
-Submitting Diary Entry
-Editing Diary Entry
-Deleting Data Entry
+Authentication (Email + Password authentification, Google Authentification), 
+User Registration, 
+Submitting Diary Entry, 
+Editing Diary Entry, 
+Deleting Data Entry, 
 
 The data is persisted on Firebase and the whole project is done while adhering strictly to the style guide for Java
 
