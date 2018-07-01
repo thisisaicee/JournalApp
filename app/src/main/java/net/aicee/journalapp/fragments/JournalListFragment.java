@@ -40,7 +40,9 @@ public abstract class JournalListFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
 
-    public JournalListFragment() {}
+    public JournalListFragment() {
+
+    }
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container,

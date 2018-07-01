@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import net.aicee.journalapp.fragments.AllJournalsFragment;
 import net.aicee.journalapp.fragments.MyJournalsFragment;
@@ -21,6 +24,8 @@ public class  MainActivity extends BaseActivity {
 
     private FragmentPagerAdapter fragmentPagerAdapter;
     private ViewPager viewPager;
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,23 @@ public class  MainActivity extends BaseActivity {
                 startActivity(new Intent(MainActivity.this, NewJournalActivity.class));
             }
         });
+
+
+        // [START config_signin]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // [END config_signin]
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // [START initialize_auth]
+        mAuth = FirebaseAuth.getInstance();
+        // [END initialize_auth]
+
+
     }
 
     @Override
@@ -75,13 +97,18 @@ public class  MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int i = item.getItemId();
         if (i == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
+            mAuth.signOut();
             startActivity(new Intent(this, SignInActivity.class));
             finish();
             return true;
-        } else {
+        }
+
+
+        else {
             return super.onOptionsItemSelected(item);
         }
     }

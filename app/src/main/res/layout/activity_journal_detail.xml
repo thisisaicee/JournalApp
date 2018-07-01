@@ -11,14 +11,67 @@
 
 
 
-    <include
+    <!-- <include
         android:id="@+id/journal_contents_layout"
         layout="@layout/journal_contents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="@dimen/padding_margin_5dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp" /> -->
 
+
+
+    <EditText
+        android:id="@+id/edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_margin_5dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/edit_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_title"
+        android:layout_marginBottom="@dimen/padding_margin_5dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/padding_margin_5dp"
+
+        android:inputType="textMultiLine"
+        android:maxLines="20"
+        android:scrollHorizontally="false" />
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/edit_journal_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_margin_5dp"
+            android:src="@drawable/ic_image_checked_24"/>
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/delete_journal_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_margin_5dp"
+            android:src="@drawable/ic_image_delete_24"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

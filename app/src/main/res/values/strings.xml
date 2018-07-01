@@ -8,8 +8,8 @@
     <string name="password_label">Password</string>
     <string name="send_text">Send</string>
     <string name="sign_up">Sign Up</string>
-    <string name="hint_password">password</string>
-    <string name="hint_email">email</string>
+    <string name="hint_password">Enter your password</string>
+    <string name="hint_email">Enter your email</string>
     <string name="sign_in">Sign In</string>
     <string name="heading_recent">Recent Entries</string>
     <string name="heading_my_entries">My Entries</string>

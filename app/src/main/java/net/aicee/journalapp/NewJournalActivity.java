@@ -127,6 +127,7 @@ public class NewJournalActivity extends BaseActivity {
         // Create new journals
         String key = databaseReference.child("journals").push().getKey();
         Journal journal = new Journal(userId, username, title, body);
+
         Map<String, Object> values = journal.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
