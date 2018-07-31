@@ -10,9 +10,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.aicee.journalapp.dataModels.Journal;
 import net.aicee.journalapp.dataModels.User;
+import net.aicee.journalapp.MainActivity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +34,12 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
     private static final String TAG = "JournalDetailActivity";
 
     public static final String EXTRA_JOURNAL_KEY = "journal_key";
+    public static final String EXTRA_USER_JOURNAL_KEY = "journal_key";
 
     private DatabaseReference databaseReference;
     private ValueEventListener journalListener;
     private String journalKey;
+    private String userJournalKey;
     private static final String REQUIRED = "Required";
 
 
@@ -74,8 +79,8 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
         floatingEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+editJournal();
 
-                editJournal();
 
             }
         });
@@ -86,8 +91,88 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 deleteJournal();
+
+
             }
+
         });
+
+    }
+
+
+
+
+
+
+
+    private void editJournal() {
+        final String title = titleEditText.getText().toString();
+        final String body = contentEditText.getText().toString();
+
+        // Title is required
+        if (TextUtils.isEmpty(title)) {
+            titleEditText.setError(REQUIRED);
+            return;
+        }
+
+        // Body is required
+        if (TextUtils.isEmpty(body)) {
+            contentEditText.setError(REQUIRED);
+            return;
+        }
+
+
+
+        Toast.makeText(this, "Submitting...", Toast.LENGTH_SHORT).show();
+
+
+
+
+        final String userId = getUid();
+        databaseReference.child("users").child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user value
+                        User user = dataSnapshot.getValue(User.class);
+
+                        // [START_EXCLUDE]
+                        if (user == null) {
+                            // User is null, error out
+                            Log.e(TAG, "User " + userId + " is unexpectedly null");
+                            Toast.makeText(JournalDetailActivity.this,
+                                    "Error: could not fetch user.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Write new journal
+                            databaseReference.child("journals").child(journalKey).setValue(journalKey);
+                            databaseReference.child("journals").child("title").setValue(titleEditText.getText());
+                            databaseReference.child("journals").child("body").setValue(contentEditText.getText());
+                            databaseReference.child("user-journals").child(getUid()).child(journalKey).setValue(journalKey);
+                            databaseReference.child("user-journals").child(getUid()).child("title").setValue(titleEditText.getText());
+                            databaseReference.child("user-journals").child(getUid()).child("body").setValue(contentEditText.getText());
+                        }
+
+                        // Finish this Activity, back to the stream
+
+                        finish();
+                        // [END_EXCLUDE]
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+
+                    }
+                });
+                        // [END_EXCLUDE]
+        // [END single_value_read]
+
+
+
+
+
 
     }
 
@@ -105,44 +190,6 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void deleteJournal(){
-
-        if (getUid() != null){
-            Toast.makeText(this, "deleting...", Toast.LENGTH_SHORT).show();
-
-
-
-           databaseReference.child("journals").child(getUid()).removeValue();
-            databaseReference.child("user-journals").child(getUid()).removeValue();
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-
-      }
-        else{
-            Toast.makeText(this, "you cannot delete a another user's post...", Toast.LENGTH_SHORT).show();
-
-        }
-
-
-
-
-
-
-        }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -154,11 +201,21 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Journal object and use the values to update the UI
                 Journal journal = dataSnapshot.getValue(Journal.class);
+
                 // [START_EXCLUDE]
               //  authorTextView.setText("Written by " + journal.author);
-                titleEditText.setText(journal.title);
-                contentEditText.setText(journal.body);
-                // [END_EXCLUDE]
+
+                if (journal == null){
+                    titleEditText.setText("");
+                    contentEditText.setText("");
+                }else {
+
+                    titleEditText.setText(journal.title);
+                    contentEditText.setText(journal.body);
+
+                    // [END_EXCLUDE]
+
+                }
             }
 
             @Override
@@ -200,96 +257,43 @@ public class JournalDetailActivity extends BaseActivity implements View.OnClickL
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    private void editJournal() {
-        final String title = titleEditText.getText().toString();
-        final String body = contentEditText.getText().toString();
-
-        // Title is required
-        if (TextUtils.isEmpty(title)) {
-            titleEditText.setError(REQUIRED);
-            return;
-        }
-
-        // Body is required
-        if (TextUtils.isEmpty(body)) {
-            contentEditText.setError(REQUIRED);
-            return;
-        }
-
-        // Disable button so there are no multi-journals
-
-        Toast.makeText(this, "Editing...", Toast.LENGTH_SHORT).show();
-
-        // [START single_value_read]
-        final String userId = getUid();
-        databaseReference.child("users").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-                        User user = dataSnapshot.getValue(User.class);
-
-                        // [START_EXCLUDE]
-                        if (user == null) {
-                            // User is null, error out
-                            Log.e(TAG, "User " + userId + " is unexpectedly null");
-                            Toast.makeText(JournalDetailActivity.this,
-                                    "Error: could not fetch user.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Write new journal
-                            writeNewJournal(userId, user.username, title, body);
-                        }
-
-                        // Finish this Activity, back to the stream
-
-                        finish();
-                        // [END_EXCLUDE]
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                        // [START_EXCLUDE]
-
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END single_value_read]
-    }
-
-
-
-
-
-    private void writeNewJournal(String userId, String username, String title, String body) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
-        String key = getUid();
+    // [START write_fan_out]
+    private void writeNew(String userId, String username, String title, String body) {
+        // Create new journals
+        String key = journalKey;
         Journal journal = new Journal(userId, username, title, body);
-        Map<String, Object> postValues = journal.toMap();
+
+        Map<String, Object> values = journal.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/journals/" + key, postValues);
-        childUpdates.put("/user-journals/" + userId + "/" + key, postValues);
-
+        childUpdates.put("/journals/" + key, values);
+        childUpdates.put("/user-journals/" + userId + "/" + key, values);
         databaseReference.updateChildren(childUpdates);
     }
+    // [END write_fan_out]
 
 
 
 
 
-}
+
+   private void deleteJournal(){
+        String a = FirebaseDatabase.getInstance().getReference("journals").child(getUid()).toString();
+            if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(getUid())){
+            DatabaseReference journalsReferece = FirebaseDatabase.getInstance().getReference("journals").child(journalKey);
+            DatabaseReference userJournalsReference = FirebaseDatabase.getInstance().getReference("user-journals").child(getUid()).child(journalKey);
+           journalsReferece.removeValue();
+           userJournalsReference.removeValue();
+
+           startActivity(new Intent(JournalDetailActivity.this, MainActivity.class));
+           finish();
+           Toast.makeText(this, "Journal Deleted", Toast.LENGTH_LONG).show();
+
+            }
+            else{
+                Toast.makeText(this, "You do not have the permission to delete another users journal", Toast.LENGTH_LONG).show();
+            }
+        }
+
+
+    }
